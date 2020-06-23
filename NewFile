@@ -1,0 +1,65 @@
+const express = require('express');
+const bodyParser=require('body-parser');
+const mongoose= require('mongoose');
+
+const app=express();
+
+
+
+app.use(bodyParser.urlencoded({extended:true}));
+
+mongoose.connect("mongodb://localhost:27017/Page", { useNewUrlParser: true , useUnifiedTopology: true });
+
+const schema= {
+    First: String,
+    Last: String,
+    Email: String
+};
+
+const Model= mongoose.model("Details", schema);
+
+app.route("/")
+
+    .get(function(req,res){
+        Model.find(function(err,result){
+            res.send(result);
+        });
+    })
+
+    .post(function(req,res){
+
+        var info= new Model({
+            First: req.body.First,
+            Last: req.body.Last,
+            Email: req.body.Email
+        });
+        info.save(function(err,result){
+            res.send(result);
+        });
+    });
+
+app.route("/find")
+
+    .get(function(req,res){
+        Model.findOne({First:req.body.First}, function(err,result){
+            res.send(result);
+        })
+    })
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    app.listen(3000,function(req,res){
+        console.log("run");
+        
+    })
